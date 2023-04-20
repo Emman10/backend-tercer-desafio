@@ -2,19 +2,17 @@ import * as fs from "fs";
 
 class ProductManager {
     #products;
-    #path; // ruta del archivo
+    #path; 
     constructor(path = "productos.txt") {
         this.#path = path;
         this.#products = [];
         const loadProducts = async () => {
             try {
-                // Si el archivo existe copio los datos del archivo a #products.
                 this.#products = JSON.parse(await fs.promises.readFile(
                     this.#path,
                     "utf-8"
                 ));
             } catch {
-                // Si el archivo no existe inicializo #products con un array vacio.
                 this.#products = [];
             }
         };
@@ -83,18 +81,14 @@ class ProductManager {
             return found;
         }
     };
-
-    // Metodo para obtener la ruta al archivo
     getPath = () => {
         return this.#path;
     };
 
     updateProduct = (id, title, description, price, thumbnail, code, stock) => {
-        // busco el indice del producto
         const found = this.#products.findIndex(
             (producto) => producto.id === parseInt(id)
         );
-        // Si no existo aviso por consola, sino valido los campos y guardo
         if (found < 0) {
             console.log("Not found");
         } else {
@@ -118,7 +112,6 @@ class ProductManager {
             const codefound = this.#products.find(
                 (producto) => producto.code === code
             );
-            // verifico si el codigo nuevo no se repite en otro producto
             if (codefound && parseInt(id) !== codefound.id) {
                 error += "Ya se encuentra un producto con el mismo code. ";
             }
@@ -135,7 +128,6 @@ class ProductManager {
                     code,
                     stock,
                 };
-                //fs.writeFileSync(this.#path, JSON.stringify(this.#products));
                 const saveProducts = async () => {
                     try {
                         fs.promises.writeFile(
@@ -152,11 +144,9 @@ class ProductManager {
     };
 
     deleteProduct = (id) => {
-        // busco el indice del producto
         const found = this.#products.findIndex(
             (producto) => producto.id === parseInt(id)
         );
-        // Si no existe aviso por consola, sino quito el producto del array y guardo
         if (found < 0) {
             console.log("Not found");
         } else {
